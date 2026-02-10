@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Calendar, MapPin, Clock } from "lucide-react";
+import { Calendar, MapPin, Clock, X } from "lucide-react";
 
 interface EventItem {
   title: string;
@@ -138,7 +138,7 @@ function sortByProximity(events: EventItem[], direction: "asc" | "desc") {
 
 function EventCard({ event, isPast }: { event: EventItem; isPast?: boolean }) {
   return (
-    <article
+    <div
       className={`group flex flex-col overflow-hidden rounded-lg border border-border bg-card transition-colors hover:border-primary/40 sm:flex-row ${isPast ? "opacity-75 hover:opacity-100" : ""}`}
     >
       <div className="flex shrink-0 items-center justify-center bg-secondary px-6 py-6 sm:w-28 sm:flex-col">
@@ -188,12 +188,84 @@ function EventCard({ event, isPast }: { event: EventItem; isPast?: boolean }) {
           </span>
         </div>
       </div>
-    </article>
+    </div>
+  );
+}
+
+function EventModal({
+  event,
+  onClose,
+}: {
+  event: EventItem;
+  onClose: () => void;
+}) {
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm p-4"
+      onClick={onClose}
+      onKeyDown={(e) => {
+        if (e.key === "Escape") onClose();
+      }}
+      role="dialog"
+      aria-modal="true"
+      aria-label={`${event.title} event details`}
+      tabIndex={-1}
+    >
+      <div
+        className="relative w-full max-w-2xl overflow-hidden rounded-lg border border-border bg-card"
+        onClick={(e) => e.stopPropagation()}
+        onKeyDown={() => {}}
+        role="document"
+      >
+        <button
+          type="button"
+          onClick={onClose}
+          className="absolute top-4 right-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-background/80 text-foreground backdrop-blur-sm transition-colors hover:bg-background"
+          aria-label="Close event details"
+        >
+          <X className="h-4 w-4" />
+        </button>
+
+        <div className="border-b border-border bg-secondary/60 px-6 py-5">
+          <div className="mb-3 flex flex-wrap items-center gap-3">
+            <span
+              className={`rounded-full border px-3 py-0.5 font-mono text-xs uppercase tracking-wider ${getTypeStyles(event.type)}`}
+            >
+              {event.type}
+            </span>
+          </div>
+          <h3 className="text-2xl font-bold text-card-foreground">
+            {event.title}
+          </h3>
+        </div>
+
+        <div className="space-y-5 p-6">
+          <p className="text-sm leading-relaxed text-muted-foreground">
+            {event.description}
+          </p>
+          <div className="flex flex-col gap-3 text-sm text-muted-foreground">
+            <span className="flex items-center gap-2">
+              <Calendar className="h-4 w-4 text-primary" />
+              {event.date}
+            </span>
+            <span className="flex items-center gap-2">
+              <Clock className="h-4 w-4 text-primary" />
+              {event.time}
+            </span>
+            <span className="flex items-center gap-2">
+              <MapPin className="h-4 w-4 text-primary" />
+              {event.location}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
 export function Events() {
   const [activeTab, setActiveTab] = useState<"upcoming" | "past">("upcoming");
+  const [selectedEvent, setSelectedEvent] = useState<EventItem | null>(null);
 
   const sortedUpcoming = sortByProximity(upcomingEvents, "asc");
   const sortedPast = sortByProximity(pastEvents, "desc");
@@ -201,10 +273,11 @@ export function Events() {
   const currentEvents = activeTab === "upcoming" ? sortedUpcoming : sortedPast;
 
   return (
-    <section
-      id="events"
-      className="border-t border-border px-6 py-24 md:py-32"
-    >
+    <>
+      <section
+        id="events"
+        className="border-t border-border px-6 py-24 md:py-32"
+      >
       <div className="mx-auto max-w-4xl">
         <div className="mb-12 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
@@ -254,11 +327,14 @@ export function Events() {
 
         <div className="flex flex-col gap-4">
           {currentEvents.map((event) => (
-            <EventCard
+            <button
               key={event.title}
-              event={event}
-              isPast={activeTab === "past"}
-            />
+              type="button"
+              onClick={() => setSelectedEvent(event)}
+              className="text-left"
+            >
+              <EventCard event={event} isPast={activeTab === "past"} />
+            </button>
           ))}
         </div>
 
@@ -268,6 +344,14 @@ export function Events() {
           </p>
         )}
       </div>
-    </section>
+      </section>
+
+      {selectedEvent && (
+        <EventModal
+          event={selectedEvent}
+          onClose={() => setSelectedEvent(null)}
+        />
+      )}
+    </>
   );
 }
