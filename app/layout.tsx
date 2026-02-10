@@ -20,6 +20,15 @@ export const metadata: Metadata = {
   title: "RoboCCop | Robotics Club Copenhagen - DTU",
   description:
     "Student-driven robotics organization at DTU building intelligent robotic systems. Competitions, workshops, hackathons, and community.",
+  icons: {
+    icon: [
+      { url: "/favicon_io/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon_io/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon_io/favicon.ico" },
+    ],
+    apple: [{ url: "/favicon_io/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+  },
+  manifest: "/favicon_io/site.webmanifest",
 };
 
 export const viewport: Viewport = {
