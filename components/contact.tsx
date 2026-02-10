@@ -3,10 +3,10 @@
 import { Mail, MapPin, ArrowUpRight } from "lucide-react";
 
 const socialLinks = [
-  { label: "Instagram", href: "#" },
-  { label: "LinkedIn", href: "#" },
-  { label: "GitHub", href: "#" },
-  { label: "Discord", href: "#" },
+  // { label: "Instagram", href: "#" },
+  // { label: "LinkedIn", href: "#" },
+  { label: "GitHub", href: "https://github.com/dtu-roboccop" },
+  { label: "Discord", href: "https://discord.gg/Q6wu8r27" },
 ];
 
 export function Contact() {
