@@ -18,7 +18,7 @@ export default function Page() {
         <Events />
         <Projects />
         <Team />
-        <Sponsors />
+        {/* <Sponsors /> */}
         <Contact />
       </main>
       <Footer />
