@@ -2,9 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { useTheme } from "next-themes";
 import { Menu, X } from "lucide-react";
-import { ThemeToggle } from "@/components/theme-toggle";
 
 const navLinks = [
   { label: "About", href: "#about" },
@@ -15,7 +13,6 @@ const navLinks = [
 
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { resolvedTheme } = useTheme();
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
@@ -49,11 +46,9 @@ export function Navbar() {
           >
             Join Us
           </a>
-          <ThemeToggle />
         </div>
 
         <div className="flex items-center gap-3 md:hidden">
-          <ThemeToggle />
           <button
             type="button"
             onClick={() => setMobileOpen(!mobileOpen)}
